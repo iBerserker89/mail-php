@@ -19,9 +19,9 @@ if (isset($_POST['nome'])) {
         $aviso .= 'Favor preencher a area.<br>';
     } else {
         if ($area == 'vendas') {
-            $email_to = 'lucianof.barros89@gmail.com';
+            $email_to = 'vendas@vendas.com';
         } elseif ($area == 'suporte') {
-            $email_to = 'lucianof.barros89@gmail.com';
+            $email_to = 'suporte@suporte.com';
         } else {
             $aviso .= 'Área selecionada é inválida';
         }
@@ -32,10 +32,9 @@ if (isset($_POST['nome'])) {
 
     if (empty($aviso) && isset($email_to)) {
         $body = '
-            <!doctype html>
+            <!DOCTYPE html>
             <html lang="pt-br">
             <head>
-                <meta charset="UTF-8">
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                 <title>Mail</title>
             </head>
@@ -47,34 +46,35 @@ if (isset($_POST['nome'])) {
         $body .= 'Mensagem: ' . '<br>' . nl2br($mensagem) . '<br>';
         $body .= '</body></html>';
 
-        $email_headers = "Content-type: text/html;charset=utf-8\r\n";
-        $email_headers .= "from: " . $email;
+        $subject = 'Email enviado pelo formulário de contato';
+        $email_headers[] = "Content-type: text/html;charset=utf-8";
+        $email_headers[] = 'MIME-Version: 1.0';
+        $email_headers[] = "From: " . $email;
 
 
-        $retorno = mail($email_to, 'Email enviado pelo formulário de contato', $body, $email_headers);
+        $retorno = mail($email_to, $subject, $body, implode('\r\n', $email_headers));
+
+        $sucesso = true;
 
         if ($retorno) {
             $sucesso = true;
             $aviso = 'Email enviado com sucesso!';
         } else {
             $aviso = 'Erro ao enviar ao email';
+            $errorMessage = error_get_last();
+            echo $errorMessage;
         }
 
         $aviso .= '<br><br> <a href="contato.php">Voltar</a>';
-
-        $sucesso = true;
     }
 }
 
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="Content-Type" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Formulário</title>
 </head>
 <body>
